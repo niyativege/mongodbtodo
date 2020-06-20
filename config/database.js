@@ -35,10 +35,54 @@ var userSchema = new mongoose.Schema({
 
 });
 
+var todoSchema =  new mongoose.Schema({
+
+    tid: {
+        type: String,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true
+    },
+
+    uid: {
+        type: String,
+        allowNull: false
+    },
+
+    title: {
+        type: String,
+        allowNull: false
+    },
+
+    description: {
+        type: String,
+        allowNull: false
+    },
+
+    deleted: {
+        type: Boolean,
+        allowNull: false
+    },
+
+    completed: {
+        type: Boolean,
+        allowNull: false
+    }
+
+}, {
+    timestamps: false
+});
+
+
+
+
 var Users = mongoose.model('Users', userSchema);
+var Todo = mongoose.model('Users', todoSchema);
+
 
 var db = {
-    Users
+    Users,
+    Todo
 };
 
 
