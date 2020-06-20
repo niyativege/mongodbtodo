@@ -39,45 +39,51 @@ var todoSchema =  new mongoose.Schema({
 
     tid: {
         type: String,
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true
+        required: true
     },
+
+
+    // tid: {
+    //     type: String,
+    //     allowNull: false,
+    //     primaryKey: true,
+    //     autoIncrement: true
+    // },
+
+    // we do not have a concept if auto increment in no sql databases and also those keys allowNull, primaryKey, autoIncrement are part of sequelize not mongodb
+
 
     uid: {
         type: String,
-        allowNull: false
+        required: true
     },
 
     title: {
         type: String,
-        allowNull: false
+        required: true
     },
 
     description: {
         type: String,
-        allowNull: false
+        required: true
     },
 
     deleted: {
         type: Boolean,
-        allowNull: false
+        required: true
     },
 
     completed: {
         type: Boolean,
-        allowNull: false
+        required: true
     }
 
-}, {
-    timestamps: false
 });
 
 
-
-
 var Users = mongoose.model('Users', userSchema);
-var Todo = mongoose.model('Users', todoSchema);
+// var Todo = mongoose.model('Users', todoSchema);  you used same name for todo table you cant have 2 tables with same name.
+var Todo = mongoose.model('Todo', todoSchema);
 
 
 var db = {
