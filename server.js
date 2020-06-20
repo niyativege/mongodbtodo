@@ -1,32 +1,15 @@
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test', {useNewUrlParser: true});
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
- console.log('Its connected')
-  // we're connected!
-});
-
-
 var express = require('express');
 var log = require('morgan')('dev');
 var bodyParser = require('body-parser');
 
-var properties = require('./config/properties');
-//var db = require('./config/database');
-//hero routes
-var usersRoutes = require('./api/users/users.routes');
+var db = require('./config/database');
+
 var app = express();
 
 //configure bodyparser
 var bodyParserJSON = bodyParser.json();
 var bodyParserURLEncoded = bodyParser.urlencoded({extended:true});
 
-//initialise express router
-var router = express.Router();
-
-// call the database connectivity function
-//db();
 
 // configure app.use()
 app.use(log);
@@ -42,12 +25,41 @@ app.use(function(req, res, next) {
    next();
  });
 
-// use express router
-app.use('/api',router);
-//call heros routing
-usersRoutes(router);
+
+// APIS
+
+app.post('/create', function(req, res) {
+
+  // Your code here;
+
+  // db.Users.find();
+
+});
+
+
+app.get('/get', function(req, res) {
+
+  // Your code here;
+
+});
+
+
+app.put('/update', function(req, res) {
+
+  // Your code here;
+
+});
+
+
+app.delete('/remove', function(req, res) {
+
+  // Your code here;
+
+});
+
+
 
 // intialise server
-app.listen(properties.PORT, (req, res) => {
-    console.log(`Server is running on ${properties.PORT} port.`);
-})
+app.listen(4000, (req, res) => {
+    console.log(`Server is running on 4000 port.`);
+});
