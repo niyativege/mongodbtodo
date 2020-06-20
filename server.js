@@ -65,17 +65,7 @@ app.post('/create/user', async function (req, res) {
       profile_pic: req.body.profile_pic
     }
 
-    // this is sequelize function to insert data into database
-    // var result = await users.create(new_user);
-
-    // this is not the right function to insert data into database in mongodb
-    /*db.Users.create({
-       name: req.body.name,
-       email_id: req.body.email_id,
-       profile_pic: req.body.profile_pic
-    }) */
-
-    // this is the right way of doing it "create is not a mongodb function we use save insted" checkout the mongodb docs which I gave you find out these functions
+ 
 
     var new_user_obj = new db.Users(new_user);
 
@@ -119,25 +109,25 @@ app.get('/get/user', async function (req, res) {
 
   try {
 
-    // var all_users = await users.findAll();
-
-    // if (all_users.length > 0) {
-
-    //   res.status(200).json({
-    //     success: true,
-    //     users: all_users
-    //   });
-    //   return;
-
-    // }
-    // else {
-    //   res.status(200).json({
-    //     success: true,
-    //     message: "No users"
-    //   });
-    //   return;
-    // }
-
+        db.Users.find((err, data) => {
+    
+            if (err) {
+              console.error(err);
+              res.status(500).json({
+                success: false,
+                message: err
+              });
+              return;
+            }
+    
+            console.log(data);
+    
+            res.status(200).json({
+                success: true,
+            });
+            return;
+        });
+    
 
   } catch (err) {
 
@@ -153,7 +143,6 @@ app.get('/get/user', async function (req, res) {
   // db.Users.getUsers({})
 });
 
-
 app.put('/update/user', async function (req, res) {
 
   try {
@@ -161,37 +150,31 @@ app.put('/update/user', async function (req, res) {
     if (!req.body.uid) {
       res.status(500).json({
         success: true,
-        message: "uid is required"
+        message: "UID is required"
       });
       return;
     }
 
-    var update_user = {
-      name: req.body.name,
-      email_id: req.body.email_id,
-      profile_pic: req.body.profile_pic
-    }
 
-    // var all_users = await users.update(update_user, {
-    //   where: {
-    //     uid: req.body.uid
-    //   }
-    // });
-
-    // if (all_users) {
-    //   res.status(200).json({
-    //     success: true,
-    //     users: all_users
-    //   });
-    //   return;
-    // }
-    // else {
-    //   res.status(500).json({
-    //     success: false,
-    //     message: "error"
-    //   });
-    //   return;
-    // }
+      db.Users.findByIdAndUpdate(
+        req.body.uid,
+        { name: req.body.name,
+          email_id: req.body.email_id,
+          profile_pic: req.body.profile_pic},
+        { new: true },
+        
+        (err, doc) => {
+          if (err) {
+            console.error(err);
+            res.json(err);
+            return;
+          } else {
+            res.json(doc);
+            return;
+          }
+        }
+      );
+    
 
 
   } catch (err) {
@@ -205,10 +188,9 @@ app.put('/update/user', async function (req, res) {
     return;
   }
 
-  // db.Users.updateUser()
+  // db.Todo.update()
 
-
-});
+})
 
 
 app.delete('/remove/user', async function (req, res) {
@@ -224,28 +206,13 @@ app.delete('/remove/user', async function (req, res) {
       return;
     }
 
-    // var all_users = await users.destroy({
-    //   where: {
-    //     uid: req.body.uid
-    //   }
-    // })
-
-    // if (all_users) {
-    //   res.status(200).json({
-    //     success: true,
-    //     users: all_users
-    //   });
-    //   return;
-    // }
-    // else {
-    //   res.status(500).json({
-    //     success: false,
-    //     message: "error"
-    //   });
-    //   return;
-    // }
-
-
+    db.Users.remove = (req, res) => {
+      if (!req.body.userId) {
+        res.status(500).json({
+          message: "userId is not sent",});
+        return;
+    }
+  }
 
   } catch (err) {
 
@@ -302,58 +269,67 @@ app.post('/create/todo', async function (req, res) {
       description: req.body.description,
     }
 
-    // var result = await todo.create(new_todo);
+    var new_todo_obj = new db.Todo(new_todo);
 
-    // if (result) {
-    //   res.status(200).json({
-    //     success: true,
-    //     message: ' todo created'
-    //   });
-    //   return;
-    // }
-    // else {
-    //   res.status(500).json({
-    //     success: false,
-    //     message: 'error'
-    //   });
-    //   return;
-    // }
+    new_todo_obj.save((err, data) => {
+
+        if (err) {
+          console.error(err);
+          res.status(500).json({
+            success: false,
+            message: "error"
+          });
+          return;
+        }
+
+        console.log(data);
+
+        res.status(200).json({
+            success: true,
+            message: "Todo Created"
+        });
+        return;
+    });
+
 
   } catch (err) {
 
-    console.log(err);
+    console.log(err)
+
     res.status(500).json({
       success: false,
-      message: err.message
+      error: 'Server error'
     });
     return;
-
   }
 
-  // db.Todo.find({})
+
+  
 
 });
 
 app.get('/get/todo', async function (req, res) {
   try {
 
-    // var result = await users.findAll();
+  db.Todo.find((err, data) => {
+    
+      if (err) {
+        console.error(err);
+        res.status(500).json({
+          success: false,
+          message: err
+        });
+        return;
+      }
 
-    // if (result.length > 0) {
-    //   res.status(200).json({
-    //     success: true,
-    //     users: result
-    //   });
-    //   return;
+      console.log(data);
 
-    // }
-    // else {
-    //   res.status(500).json({
-    //     success: false,
-    //     message: "error"
-    //   });
-    //   return;
-    // }
+      res.status(200).json({
+          success: true,
+      });
+      return;
+  });
+
 
 
   } catch (err) {
@@ -385,33 +361,27 @@ app.put('/update/todo', async function (req, res) {
     }
 
 
-    var update_obj = {
-      title: req.body.title,
-      description: req.body.description,
-      deleted: req.body.deleted,
-      completed: req.body.completed
-    }
+      db.Todo.findByIdAndUpdate(
+        req.body.tid,
+        { title: req.body.title,
+          description: req.body.description,
+          deleted: req.body.deleted,
+          completed: req.body.completed},
+        { new: true },
+        
+        (err, doc) => {
+          if (err) {
+            console.error(err);
+            res.json(err);
+            return;
+          } else {
+            res.json(doc);
+            return;
+          }
+        }
+      );
+    
 
-    // var result = await todo.update(update_obj, {
-    //   where: {
-    //     tid: req.body.tid
-    //   }
-    // })
-
-    // if (result) {
-    //   res.status(200).json({
-    //     success: true,
-    //     message: 'todo updated'
-    //   });
-    //   return;
-    // }
-    // else {
-    //   res.status(500).json({
-    //     success: true,
-    //     message: 'error'
-    //   });
-    //   return;
-    // }
 
   } catch (err) {
 
@@ -444,6 +414,15 @@ app.post('/delete/todo', async function (req, res) {
     var update_obj = {
       deleted: true
     }
+
+    
+    db.Todo.remove = (req, res) => {
+      if (!req.body.userId) {
+        res.status(500).json({
+          message: "userId is not sent",});
+        return;
+    }
+  }
 
     // var result = await todo.update(update_obj, {
     //   where: {
