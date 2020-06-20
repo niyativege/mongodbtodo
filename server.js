@@ -101,7 +101,6 @@ app.post('/create/user', async function (req, res) {
     return;
   }
 
-  // db.Users.find({})
 });
 
 
@@ -415,6 +414,7 @@ app.post('/delete/todo', async function (req, res) {
       deleted: true
     }
 
+    // You have to do update here not remove
     
     db.Todo.remove = (req, res) => {
       if (!req.body.userId) {
